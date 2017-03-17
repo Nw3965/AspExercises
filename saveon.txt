@@ -1,0 +1,99 @@
+//ASP.NET and Mongo
+
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.IO;
+using MongoDB.Driver;
+using MongoDB.Driver.GridFS;
+using MongoDB.Driver.Builders;
+using MongoDB.Driver.Linq;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
+
+namespace SaveOn
+{
+    public partial class Form1 : Form
+    {
+
+
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private  void btnOpen_Click (object sender, EventArgs e)
+        {
+            //MongoDBに接続
+             // string connectionString = "mongodb://localhost:*****";
+
+
+            //データベースを選択
+            MongoClient clientO = new MongoClient();
+           
+            //testというデータベースに接続
+            IMongoDatabase myDatabase = clientO.GetDatabase("test");
+
+            
+
+
+            //seed というコレクションに接続する
+            IMongoCollection<AddressEntry> myCollection = myDatabase.GetCollection<AddressEntry>("seed");
+
+          　//OpenボタンでPDFファイルを参照する
+            OpenFileDialog filechooser = new OpenFileDialog();
+            filechooser.Filter = "pdf files (*.pdf)|*.pdf|All Files(*.*)|*.*";
+
+            // Cドライブ内のフォルダを参照
+            filechooser.InitialDirectory = "C:*********";
+            if (filechooser.ShowDialog() == DialogResult.OK) {          
+                FileStream fs = new FileStream(filechooser.FileName, FileMode.Open);
+                byte[] fileBytes = new byte[fs.Length];
+                myCollection.InsertOne(new AddressEntry(filechooser.FileName, fileBytes));
+            }
+
+
+           // データ挿入
+
+
+
+
+            //データベース切断
+
+
+           Close the connection
+              db.close();
+
+
+        }
+
+        private object require(char v)
+        {
+            throw new NotImplementedException();
+        }
+
+        private void btnUpload_Click(object sender, EventArgs e)
+        {
+        }
+
+
+                
+
+        private AddressEntry newAddressEntry()
+        {
+            throw new NotImplementedException();
+        }
+    }
+}
